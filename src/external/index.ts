@@ -1,3 +1,4 @@
 import { Agent } from "./Agent";
+import { Config } from "../common/Config";
 
-new Agent().serve(8080);
+new Agent().serve(Config.getPort());

@@ -1,12 +1,13 @@
-import * as express from "express";
-import * as bodyParser from "body-parser";
+import express = require("express");
+import bodyParser = require("body-parser");
+import { Config } from "../common/Config";
 
 const app = express();
 const server = require("http").Server(app);
 const io = require("socket.io")(server);
 
-let consumerNames: string[] = [
-    "chemjenkins"
+const allowedFieldKeys: string[] = [
+    Config.getFieldKey()
 ];
 
 interface Socket {
@@ -51,12 +52,12 @@ class ClientSpace {
 export class Agent {
     private clientSpaces: ClientSpace[] = [];
 
-    private forwardEvent(fieldKey: string, eventType: string, data: any) {
+    private forwardEvent(fieldKey: string, data: any) {
         let emitted = false;
         for (let client of this.clientSpaces) {
             if (client.name === fieldKey) {
                 console.info("Forwarding data to " + fieldKey);
-                client.nsp.emit(eventType, data);
+                client.nsp.emit("forward", data);
                 emitted = true;
                 break;
             }
@@ -70,8 +71,8 @@ export class Agent {
     public serve(port: number): void {
         app.use(bodyParser.json());
 
-        app.post("/fields/:fieldKey/:eventType", (req: any, res: any) => {
-            this.forwardEvent(req.params.fieldKey, req.params.eventType, { headers: req.headers, body: req.body });
+        app.post("/fields/:fieldKey", (req: any, res: any) => {
+            this.forwardEvent(req.params.fieldKey, { headers: req.headers, body: req.body });
 
             try {
                 res.sendStatus(200);
@@ -90,10 +91,10 @@ export class Agent {
             console.info("connection");
         });
 
-        for (let consumerName of consumerNames) {
-            let nsp = io.of("/" + consumerName);
-            let clientSpace = new ClientSpace(consumerName, nsp);
-            console.info(consumerName);
+        for (let fieldKey of allowedFieldKeys) {
+            let nsp = io.of("/" + fieldKey);
+            let clientSpace = new ClientSpace(fieldKey, nsp);
+            console.info(fieldKey);
             this.clientSpaces.push(clientSpace);
             nsp.on("connection", (socket: any) => {
                 clientSpace.registerClient(socket);
@@ -112,7 +113,7 @@ export class Agent {
                         const segs = token.split(":");
                         const tokenTime = parseInt(segs[2], 10);
                         const timespan = Math.abs(tokenTime - Date.now());
-                        if (segs[0] === consumerName && segs[1] === clientId) {
+                        if (segs[0] === fieldKey && segs[1] === clientId) {
                             if (timespan <= 5 * 60 * 1000) {
                                 return next();
                             } else {

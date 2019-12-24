@@ -1,7 +1,7 @@
-import * as crypto from 'crypto';
+import * as crypto from "crypto";
 
 import PQueue from "p-queue";
-import { TestHandler } from './TestHandler';
+import { TestHandler } from "./TestHandler";
 
 export interface GitHubWebhookHandlerInitParams {
   webhookSecret: string;
@@ -24,25 +24,25 @@ export class GitHubWebhookHandler implements TestHandler {
       return;
     }
 
-    const hmac = crypto.createHmac('sha1', this.githubWebhookHmacSecret);
-    const evtSig = webhookRequest.get('X-Hub-Signature') as string;
+    const hmac = crypto.createHmac("sha1", this.githubWebhookHmacSecret);
+    const evtSig = webhookRequest.get("X-Hub-Signature") as string;
     if (!evtSig) {
-      throw new Error('X-Hub-Signature is not found.');
+      throw new Error("X-Hub-Signature is not found.");
     }
 
-    hmac.update(webhookRequest.rawBodyAsString, 'utf8');
-    const hmacSig = hmac.digest('hex');
-    if (evtSig.localeCompare('sha1=' + hmacSig) !== 0) {
-      throw new Error('Webhook signature does not match.');
+    hmac.update(webhookRequest.rawBodyAsString, "utf8");
+    const hmacSig = hmac.digest("hex");
+    if (evtSig.localeCompare("sha1=" + hmacSig) !== 0) {
+      throw new Error("Webhook signature does not match.");
     }
   };
 
   public handle(webhookRequest: any): Promise<void> {
     return this.queue.add(() => {
       this.verifyWebhookSignature(webhookRequest);
-      const evtType = webhookRequest.get('X-GitHub-Event') as string;
+      const evtType = webhookRequest.get("X-GitHub-Event") as string;
       console.info(evtType);
-      console.info(JSON.stringify(webhookRequest.body, null, 2));
+      console.info(webhookRequest.body);
     });
   }
 }

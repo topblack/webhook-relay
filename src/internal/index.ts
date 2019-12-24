@@ -1,16 +1,17 @@
 import * as io from "socket.io-client";
 import * as rest from "restler";
+import { Config } from "../common/Config";
 
 class TestSocketIO {
 
     private getToken = (): string => {
         // TODO, Encryption
-        return `chemjenkins:123:${Date.now()}`;
+        return `${Config.getFieldKey()}:${Config.getInternalAgentId()}:${Date.now()}`;
     }
 
     public main() {
 
-        let socket = io(`http://localhost:8080/chemjenkins?clientId=123&token=${this.getToken()}`);
+        let socket = io(`${Config.getExternalAgentUrl()}/${Config.getFieldKey()}?clientId=${Config.getInternalAgentId()}&token=${this.getToken()}`);
         socket.on("connect", (sock: any) => {
             console.info("Connected");
         });
@@ -25,8 +26,9 @@ class TestSocketIO {
               token: this.getToken()
             }
         });
-        socket.on("github-webhook", (data: any) => {
-            rest.postJson("http://localhost:8080/test", data.body, {
+        socket.on("forward", (data: any) => {
+            console.info(data.body);
+            rest.postJson(Config.getInternalForwardUrl(), data.body, {
                 headers: data.headers
             }).on("complete", (data, response) => {
                 if (response.statusCode === 200) {
