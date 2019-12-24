@@ -1,12 +1,15 @@
 {
   "name": "webhook-relay",
   "version": "1.0.0",
-  "description": "",
+  "description": "Relay webhook event from internet to local network.",
   "main": "index.js",
   "scripts": {
     "build": "tsc",
     "external": "node dist/external",
-    "internal": "node dist/internal"
+    "internal": "node dist/internal",
+    "docker-build": "docker build -t webhook-relay .",
+    "docker-run-int": "docker run --rm --name webhook-relay-int -p 8000:3000 webhook-relay internal",
+    "docker-run-ext": "docker run --rm --name webhook-relay-ext -p 8001:3000 webhook-relay external"
   },
   "repository": {
     "type": "git",
