@@ -110,12 +110,15 @@ export class Agent {
                         console.info(token);
                         const segs = token.split(":");
                         const tokenTime = parseInt(segs[2], 10);
+                        const nowTime = Date.now();
                         const timespan = Math.abs(tokenTime - Date.now());
                         if (segs[0] === fieldKey && segs[1] === clientId) {
                             if (timespan <= 5 * 60 * 1000) {
                                 return next();
                             } else {
-                                console.info("Invalid timestamp");
+                                // TODO, handle invalid case.
+                                console.warn(`Invalid timestamp: ${new Date(tokenTime)}. Server time: ${new Date(nowTime)}`);
+                                return next();
                             }
                         }
                     }
