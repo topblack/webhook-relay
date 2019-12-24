@@ -1,0 +1,44 @@
+{
+  "name": "webhook-relay",
+  "version": "1.0.0",
+  "description": "Relay webhook event from internet to local network.",
+  "main": "index.js",
+  "scripts": {
+    "build": "tsc",
+    "testapp": "cross-env APP_PORT=3000 node dist/test",
+    "external": "cross-env APP_FIELD_KEY=local APP_PORT=8080 node dist/external",
+    "internal": "cross-env APP_FIELD_KEY=local APP_EXTAGENT_URL=http://localhost:8080 APP_INTAGENT_ID=agentId APP_INTFORWARD_URL=http://localhost:3000/github node dist/internal",
+    "docker-build": "docker build -t webhook-relay .",
+    "docker-run-int": "docker run -d --rm --name webhook-relay-int webhook-relay internal",
+    "docker-run-ext": "docker run -d --rm --name webhook-relay-ext -p 8080:3000 webhook-relay external"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/topblack/webhook-relay.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/topblack/webhook-relay/issues"
+  },
+  "homepage": "https://github.com/topblack/webhook-relay#readme",
+  "dependencies": {
+    "body-parser": "^1.17.2",
+    "crypto": "^1.0.1",
+    "express": "^4.17.1",
+    "node-rsa": "^1.0.7",
+    "p-queue": "^6.2.1",
+    "restler": "^3.4.0",
+    "socket.io": "^2.0.3"
+  },
+  "devDependencies": {
+    "@types/express": "^4.17.2",
+    "@types/node": "^12.12.21",
+    "@types/p-queue": "^3.2.1",
+    "@types/restler": "^3.1.5",
+    "@types/socket.io-client": "^1.4.32",
+    "cross-env": "^6.0.3",
+    "tslint": "^5.20.1",
+    "typescript": "^3.7.4"
+  }
+}
