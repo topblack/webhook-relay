@@ -1,0 +1,33 @@
+{
+  "name": "webhook-relay",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "build": "tsc",
+    "external": "node dist/external",
+    "internal": "node dist/internal"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/topblack/webhook-relay.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/topblack/webhook-relay/issues"
+  },
+  "homepage": "https://github.com/topblack/webhook-relay#readme",
+  "dependencies": {
+    "body-parser": "^1.17.2",
+    "express": "^4.15.3",
+    "node-rsa": "^1.0.7",
+    "restler": "^3.4.0",
+    "socket.io": "^2.0.3"
+  },
+  "devDependencies": {
+    "@types/node": "^12.12.21",
+    "tslint": "^5.20.1",
+    "typescript": "^3.7.4"
+  }
+}
