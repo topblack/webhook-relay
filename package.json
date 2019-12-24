@@ -8,8 +8,8 @@
     "external": "node dist/external",
     "internal": "node dist/internal",
     "docker-build": "docker build -t webhook-relay .",
-    "docker-run-int": "docker run --rm --name webhook-relay-int -p 8000:3000 webhook-relay internal",
-    "docker-run-ext": "docker run --rm --name webhook-relay-ext -p 8001:3000 webhook-relay external"
+    "docker-run-int": "docker run -d --rm --name webhook-relay-int -p 8000:3000 webhook-relay internal",
+    "docker-run-ext": "docker run -d --rm --name webhook-relay-ext -p 8001:3000 webhook-relay external"
   },
   "repository": {
     "type": "git",
@@ -23,8 +23,10 @@
   "homepage": "https://github.com/topblack/webhook-relay#readme",
   "dependencies": {
     "body-parser": "^1.17.2",
+    "crypto": "^1.0.1",
     "express": "^4.15.3",
     "node-rsa": "^1.0.7",
+    "p-queue": "^6.2.1",
     "restler": "^3.4.0",
     "socket.io": "^2.0.3"
   },
