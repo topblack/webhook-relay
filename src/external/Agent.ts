@@ -81,9 +81,7 @@ export class Agent {
             }
         });
 
-        app.post("/test", (req: any, res: any) => {
-            console.info(JSON.stringify(req.headers));
-            console.info(req.body);
+        app.get("/test", (req: any, res: any) => {
             res.sendStatus(200);
         });
 
