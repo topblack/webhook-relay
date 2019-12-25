@@ -5,9 +5,11 @@
   "main": "index.js",
   "scripts": {
     "build": "tsc",
-    "testapp": "cross-env APP_PORT=3000 node dist/test",
-    "external": "cross-env APP_FIELD_KEY=local APP_PORT=8080 node dist/external",
-    "internal": "cross-env APP_FIELD_KEY=local APP_EXTAGENT_URL=http://localhost:8080 APP_INTAGENT_ID=agentId APP_INTFORWARD_URL=http://localhost:3000/github node dist/internal",
+    "testapp": "cross-env APP_PORT=3000 APP_WEBHOOK_SECRET=Perkinelmer123 node dist/test",
+    "external": "node dist/external",
+    "internal": "cross-env APP_FIELD_KEY=github APP_EXTAGENT_URL=https://webhook-relay.chem.perkinelmercloud.net APP_INTAGENT_ID=agentId APP_INTFORWARD_URL=http://localhost:3000/github node dist/internal",
+    "external-dev": "cross-env APP_FIELD_KEY=local APP_PORT=8080 node dist/external",
+    "internal-dev": "cross-env APP_FIELD_KEY=local APP_EXTAGENT_URL=http://localhost:8080 APP_INTAGENT_ID=agentId APP_INTFORWARD_URL=http://localhost:3000/github node dist/internal",
     "docker-build": "docker build -t webhook-relay .",
     "docker-run-int": "docker run -d --rm --name webhook-relay-int webhook-relay internal",
     "docker-run-ext": "docker run -d --rm --name webhook-relay-ext -p 8080:3000 webhook-relay external"

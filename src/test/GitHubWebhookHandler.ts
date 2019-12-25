@@ -35,6 +35,8 @@ export class GitHubWebhookHandler implements TestHandler {
     if (evtSig.localeCompare("sha1=" + hmacSig) !== 0) {
       throw new Error("Webhook signature does not match.");
     }
+
+    console.info("Verified GitHub webhook request.")
   };
 
   public handle(webhookRequest: any): Promise<void> {
